@@ -1,0 +1,31 @@
+diff -r 869a63c3f311 src/_mingw.bat
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/src/_mingw.bat	Thu Jun 14 10:18:24 2012 -0400
+@@ -0,0 +1,13 @@
++@echo off
++pushd %~dp0
++
++set PATH=C:\MinGW\bin;C:\Perl\bin
++mingw32-make -f Make_ming.mak clean
++mingw32-make -f Make_ming.mak
++strip --strip-all gvim.exe
++strip --strip-all vimrun.exe
++strip --strip-all xxd\xxd.exe
++
++C:\Windows\System32\xcopy.exe /y /f gvim.exe "C:\Program Files (x86)\Vim\vim73\"
++C:\Windows\System32\xcopy.exe /y /f vimrun.exe "C:\Program Files (x86)\Vim\vim73\"
++C:\Windows\System32\xcopy.exe /y /f xxd\xxd.exe "C:\Program Files (x86)\Vim\vim73\"
+diff -r 869a63c3f311 src/_msvc.bat
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/src/_msvc.bat	Thu Jun 14 10:18:24 2012 -0400
+@@ -0,0 +1,10 @@
++@echo off
++pushd %~dp0
++
++call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
++nmake -f Make_mvc.mak clean
++nmake -f Make_mvc.mak
++
++C:\Windows\System32\xcopy.exe /y /f gvim.exe "C:\Program Files (x86)\Vim\vim73\"
++C:\Windows\System32\xcopy.exe /y /f vimrun.exe "C:\Program Files (x86)\Vim\vim73\"
++C:\Windows\System32\xcopy.exe /y /f xxd\xxd.exe "C:\Program Files (x86)\Vim\vim73\"

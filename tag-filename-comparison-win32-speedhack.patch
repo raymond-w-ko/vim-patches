@@ -1,0 +1,133 @@
+diff -r 869a63c3f311 src/tag.c
+--- a/src/tag.c	Wed Jun 13 19:19:41 2012 +0200
++++ b/src/tag.c	Thu Jun 14 10:08:36 2012 -0400
+@@ -3661,32 +3661,129 @@ test_for_current(fname, fname_end, tag_f
+     char_u  *fname;
+     char_u  *fname_end;
+     char_u  *tag_fname;
+     char_u  *buf_ffname;
+ {
+     int	    c;
+     int	    retval = FALSE;
+     char_u  *fullname;
++#ifdef WIN3264
++    static int    has_gotten_system_drive = FALSE;
++    static char_u system_drive[3];
++    int           flag = TRUE;
++    char_u        *p;
++    int           i;
++    int           len;
++    char          a;
++    char          b;
++
++    /*
++    char_u buffer[4096];
++    FILE* f;
++    */
++#endif
+ 
+     if (buf_ffname != NULL)	/* if the buffer has a name */
+     {
+ #ifdef FEAT_EMACS_TAGS
+ 	if (is_etag)
+ 	    c = 0;	    /* to shut up GCC */
+ 	else
+ #endif
+ 	{
+ 	    c = *fname_end;
+ 	    *fname_end = NUL;
+ 	}
+ 	fullname = expand_tag_fname(fname, tag_fname, TRUE);
+ 	if (fullname != NULL)
+ 	{
++#ifdef WIN3264
++            /* cache the system drive if we haven't already */
++            if (has_gotten_system_drive == FALSE)
++            {
++                p = getenv("SystemDrive");
++                if (STRLEN(p) > 2) p = NULL;
++                STRCPY(system_drive, p);
++                has_gotten_system_drive = TRUE;
++            }
++
++            p = buf_ffname;
++
++            /* assume that the 2nd letter being ':' means we already have a
++             * drive prefix, note that this only makes sense if what we are
++             * comparing it with actually has a drive letter prefix, for
++             * example, buf_ffname could actually be a UNC path name that
++             * begins with '\\' */
++            if ((fullname[0] == '/' ||
++                 (fullname[0] == '\\' && fullname[1] != ':')) &&
++                p[1] == ':')
++            {
++                /* check drive letter to make sure they are the same */
++                for (i = 0; i < 2; ++i)
++                {
++                    a = TOLOWER_ASC(system_drive[i]);
++                    b = TOLOWER_ASC(*p);
++                    p++;
++
++                    if (a != b)
++                    {
++                        flag = FALSE;
++                        break;
++                    }
++                }
++            }
++
++            /* if the system drive is the same, which should be for most
++             * cases, then we can actually check the actual contents */
++            if (flag == TRUE)
++            {
++                len = STRLEN(fullname);
++                for (i = 0; i < len; ++i)
++                {
++                    a = TOLOWER_ASC(fullname[i]);
++                    b = TOLOWER_ASC(*p);
++
++                    /* because set shellslash or set noshellslash can change
++                     * the path separator, force it to '/' for the sake
++                     * of consistency */
++                    if (a == '\\') a = '/';
++                    if (b == '\\') b = '/';
++
++                    p++;
++
++                    if (a != b)
++                    {
++                        flag = FALSE;
++                        break;
++                    }
++                }
++            }
++
++            /* if they are equal, that means they should *mostly* be equivalent
++             * to the below fullpathcmp. Note that this doesn't account for
++             * soft or hard links, and does't account for 8.3 DOS filenames,
++             * but people who use those should be shot in this era.
++             */
++            retval = flag;
++
++            /*
++            f = fopen("C:\\vimdebug.log", "a+");
++            sprintf(buffer, "    fullname: %s\n", fullname);
++            fputs(buffer, f);
++            sprintf(buffer, "buf_ffname: %s\n", buf_ffname);
++            fputs(buffer, f);
++            sprintf(buffer, "retval: %d\n\n", retval);
++            fputs(buffer, f);
++            fclose(f);
++            f = NULL;
++            */
++#else
+ 	    retval = (fullpathcmp(fullname, buf_ffname, TRUE) & FPC_SAME);
++#endif
+ 	    vim_free(fullname);
+ 	}
+ #ifdef FEAT_EMACS_TAGS
+ 	if (!is_etag)
+ #endif
+ 	    *fname_end = c;
+     }
+ 

@@ -1,0 +1,242 @@
+diff -r 869a63c3f311 src/Make_ming.mak
+--- a/src/Make_ming.mak	Wed Jun 13 19:19:41 2012 +0200
++++ b/src/Make_ming.mak	Thu Jun 14 10:33:24 2012 -0400
+@@ -27,48 +27,48 @@
+ # set to yes for a debug build
+ DEBUG=no
+ # set to SIZE for size, SPEED for speed, MAXSPEED for maximum optimization
+ OPTIMIZE=MAXSPEED
+ # set to yes to make gvim, no for vim
+ GUI=yes
+ # FEATURES=[TINY | SMALL  | NORMAL | BIG | HUGE]
+ # set to TINY to make minimal version (few features)
+-FEATURES=BIG
++FEATURES=HUGE
+ # set to one of i386, i486, i586, i686 as the minimum target processor
+-ARCH=i386
++ARCH=native
+ # set to yes to cross-compile from unix; no=native Windows
+ CROSS=no
+ # set to path to iconv.h and libiconv.a to enable using 'iconv.dll'
+ #ICONV="."
+ ICONV=yes
+ GETTEXT=yes
+ # set to yes to include multibyte support
+ MBYTE=yes
+ # set to yes to include IME support
+ IME=yes
+ DYNAMIC_IME=yes
+ # set to yes to enable writing a postscript file with :hardcopy
+-POSTSCRIPT=no
++POSTSCRIPT=yes
+ # set to yes to enable OLE support
+-OLE=no
++OLE=yes
+ # Set the default $(WINVER) to make it work with pre-Win2k
+ ifndef WINVER
+ WINVER = 0x0400
+ endif
+ # Set to yes to enable Cscope support
+ CSCOPE=yes
+ # Set to yes to enable Netbeans support
+ NETBEANS=$(GUI)
+ 
+ 
+ # Link against the shared version of libstdc++ by default.  Set
+ # STATIC_STDCPLUS to "yes" to link against static version instead.
+ ifndef STATIC_STDCPLUS
+-STATIC_STDCPLUS=no
++STATIC_STDCPLUS=yes
+ endif
+ 
+ # If the user doesn't want gettext, undefine it.
+ ifeq (no, $(GETTEXT))
+ GETTEXT=
+ endif
+ # Added by E.F. Amatria <eferna1@platea.ptic.mec.es> 2001 Feb 23
+ # Uncomment the first line and one of the following three if you want Native Language
+@@ -94,20 +94,20 @@ INTLLIB=gnu_gettext
+ # uncomment the following, but I can't build a static version with them, ?-(|
+ #GETTEXT=c:/gettext-0.10.37-20010430
+ #STATIC_GETTEXT=USE_STATIC_GETTEXT
+ #DYNAMIC_GETTEXT=DYNAMIC_GETTEXT
+ #INTLPATH=$(GETTEXT)/lib
+ #INTLLIB=intl
+ 
+ # uncomment 'PERL' if you want a perl-enabled version
+-#PERL=C:/perl
++PERL=C:/perl
+ ifdef PERL
+ ifndef PERL_VER
+-PERL_VER=56
++PERL_VER=514
+ endif
+ ifndef DYNAMIC_PERL
+ DYNAMIC_PERL=yes
+ endif
+ # on Linux, for cross-compile, it's here:
+ #PERLLIB=/home/ron/ActivePerl/lib
+ # on NT, it's here:
+ PERLLIB=$(PERL)/lib
+@@ -117,17 +117,17 @@ XSUBPP_EXISTS=$(shell perl -e "print 1 u
+ ifeq "$(XSUBPP_EXISTS)" ""
+ XSUBPP=perl $(XSUBPPTRY)
+ else
+ XSUBPP=xsubpp
+ endif
+ endif
+ 
+ # uncomment 'LUA' if you want a Lua-enabled version
+-#LUA=/usr/local
++LUA=C:/Lua51
+ ifdef LUA
+ ifndef DYNAMIC_LUA
+ DYNAMIC_LUA=yes
+ endif
+ 
+ ifndef LUA_VER
+ LUA_VER=51
+ endif
+@@ -189,48 +189,49 @@ endif
+ #   for fil in *.h ; do vim -e -c 'set ff=unix|w|q' $fil
+ # and also, you will need to make a mingw32 'libpython20.a' to link with:
+ #   cd $PYTHON/libs
+ #   pexports python20.dll > python20.def
+ #   dlltool -d python20.def -l libpython20.a
+ # on my Linux box, I put the Python stuff here:
+ #PYTHON=/home/ron/ActivePython-2.0.0-202/src/Core
+ # on my NT box, it's here:
+-#PYTHON=c:/python20
++PYTHON=C:/Python27
+ 
+ ifdef PYTHON
+ ifndef DYNAMIC_PYTHON
+ DYNAMIC_PYTHON=yes
+ endif
+ 
+ ifndef PYTHON_VER
+-PYTHON_VER=22
++PYTHON_VER=27
+ endif
+ 
+ ifeq (no,$(DYNAMIC_PYTHON))
+ PYTHONLIB=-L$(PYTHON)/libs -lpython$(PYTHON_VER)
+ endif
+ # my include files are in 'win32inc' on Linux, and 'include' in the standard
+ # NT distro (ActiveState)
+ ifeq ($(CROSS),no)
+ PYTHONINC=-I $(PYTHON)/include
+ else
+ PYTHONINC=-I $(PYTHON)/win32inc
+ endif
+ endif
+ 
+ #PYTHON3: See comment for Python 2 above
++PYTHON3=C:/Python32
+ 
+ ifdef PYTHON3
+ ifndef DYNAMIC_PYTHON3
+ DYNAMIC_PYTHON3=yes
+ endif
+ 
+ ifndef PYTHON3_VER
+-PYTHON3_VER=31
++PYTHON3_VER=32
+ endif
+ 
+ ifeq (no,$(DYNAMIC_PYTHON3))
+ PYTHON3LIB=-L$(PYTHON3)/libs -lPYTHON$(PYTHON3_VER)
+ endif
+ 
+ ifeq ($(CROSS),no)
+ PYTHON3INC=-I $(PYTHON3)/include
+@@ -238,45 +239,45 @@ else
+ PYTHON3INC=-I $(PYTHON3)/win32inc
+ endif
+ endif
+ 
+ #	TCL interface:
+ #	  TCL=[Path to TCL directory]
+ #	  DYNAMIC_TCL=yes (to load the TCL DLL dynamically)
+ #	  TCL_VER=[TCL version, eg 83, 84] (default is 83)
+-#TCL=c:/tcl
++TCL=c:/Tcl
+ ifdef TCL
+ ifndef DYNAMIC_TCL
+ DYNAMIC_TCL=yes
+ endif
+ ifndef TCL_VER
+-TCL_VER = 83
++TCL_VER = 85
+ endif
+ TCLINC += -I$(TCL)/include
+ endif
+ 
+ 
+ #	Ruby interface:
+ #	  RUBY=[Path to Ruby directory]
+ #	  DYNAMIC_RUBY=yes (to load the Ruby DLL dynamically)
+ #	  RUBY_VER=[Ruby version, eg 16, 17] (default is 16)
+ #	  RUBY_VER_LONG=[Ruby version, eg 1.6, 1.7] (default is 1.6)
+ #	    You must set RUBY_VER_LONG when change RUBY_VER.
+-#RUBY=c:/ruby
++RUBY=c:/Ruby193
+ ifdef RUBY
+ ifndef DYNAMIC_RUBY
+ DYNAMIC_RUBY=yes
+ endif
+ #  Set default value
+ ifndef RUBY_VER
+-RUBY_VER = 16
++RUBY_VER = 191
+ endif
+ ifndef RUBY_VER_LONG
+-RUBY_VER_LONG = 1.6
++RUBY_VER_LONG = 1.9.1
+ endif
+ 
+ ifndef RUBY_PLATFORM
+ ifeq ($(RUBY_VER), 16)
+ RUBY_PLATFORM = i586-mswin32
+ else
+ ifneq ($(wildcard $(RUBY)/lib/ruby/$(RUBY_VER_LONG)/i386-mingw32),)
+ RUBY_PLATFORM = i386-mingw32
+@@ -301,16 +302,17 @@ endif
+ 
+ endif # RUBY
+ 
+ # See feature.h for a list of options.
+ # Any other defines can be included here.
+ DEF_GUI=-DFEAT_GUI_W32 -DFEAT_CLIPBOARD
+ DEFINES=-DWIN32 -DWINVER=$(WINVER) -D_WIN32_WINNT=$(WINVER) \
+ 	-DHAVE_PATHDEF -DFEAT_$(FEATURES)
++DEFINES += -DHAVE_STRUCT_TIMESPEC -DHAVE_STRUCT_TIMEZONE
+ ifeq ($(CROSS),yes)
+ # cross-compiler prefix:
+ CROSS_COMPILE = i586-pc-mingw32msvc-
+ DEL = rm
+ MKDIR = mkdir -p
+ DIRSLASH = /
+ else
+ # normal (Windows) compilation:
+@@ -436,18 +438,18 @@ endif
+ ifeq ($(DEBUG),yes)
+ CFLAGS += -g -fstack-check
+ DEBUG_SUFFIX=d
+ else
+ ifeq ($(OPTIMIZE), SIZE)
+ CFLAGS += -Os
+ else
+ ifeq ($(OPTIMIZE), MAXSPEED)
+-CFLAGS += -O3
+-CFLAGS += -fomit-frame-pointer -freg-struct-return
++CFLAGS += -O2
++CFLAGS += -flto -fuse-linker-plugin -fwhole-program
+ else  # SPEED
+ CFLAGS += -O2
+ endif
+ endif
+ CFLAGS += -s
+ endif
+ 
+ LIB = -lkernel32 -luser32 -lgdi32 -ladvapi32 -lcomdlg32 -lcomctl32 -lversion
