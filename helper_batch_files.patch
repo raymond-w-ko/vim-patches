@@ -1,6 +1,6 @@
-diff -r ca39f14c1ec3 src/_mingw.bat
+diff -r 27bfb1674333 src/_mingw.bat
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/src/_mingw.bat	Fri Jun 15 10:07:29 2012 -0400
++++ b/src/_mingw.bat	Wed Dec 12 13:38:47 2012 -0500
 @@ -0,0 +1,13 @@
 +@echo off
 +pushd %~dp0
@@ -15,16 +15,31 @@ diff -r ca39f14c1ec3 src/_mingw.bat
 +C:\Windows\System32\xcopy.exe /y /f gvim.exe "C:\Program Files (x86)\Vim\vim73\"
 +C:\Windows\System32\xcopy.exe /y /f vimrun.exe "C:\Program Files (x86)\Vim\vim73\"
 +C:\Windows\System32\xcopy.exe /y /f xxd\xxd.exe "C:\Program Files (x86)\Vim\vim73\"
-diff -r ca39f14c1ec3 src/_msvc.bat
+diff -r 27bfb1674333 src/_msvc.bat
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/src/_msvc.bat	Fri Jun 15 10:07:29 2012 -0400
-@@ -0,0 +1,10 @@
-+@echo off
-+pushd %~dp0
++++ b/src/_msvc.bat	Wed Dec 12 13:38:47 2012 -0500
+@@ -0,0 +1,25 @@
++@ECHO OFF
++PUSHD %~dp0
 +
-+call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
-+nmake -f Make_mvc.mak clean
-+nmake -f Make_mvc.mak
++SET SDK_INCLUDE_DIR=C:\Program Files\Microsoft SDKs\Windows\v7.1\Include
++SET VC_DIR="C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC
++
++CALL %VC_DIR%\vcvarsall.bat" x86_amd64
++
++@ECHO ON
++
++SET VIM_CONFIG_OPTIONS=^
++FEATURES=HUGE GUI=yes OLE=yes MBYTE=yes ^
++IME=yes DYNAMIC_IME=yes GIME=yes ^
++PYTHON=C:\Python27 DYNAMIC_PYTHON=yes PYTHON_VER=27 ^
++LUA=C:\LuaJIT\src DYNAMIC_LUA=yes ^
++SNIFF=yes CSCOPE=yes ICONV=yes GETTEXT=yes POSTSCRIPT=yes ^
++NETBEANS=yes ^
++CPU=AMD64 OPTIMIZE=MAXSPEED CPUNR=pentium4 WINVER=0x0500
++
++nmake -f Make_mvc.mak %VIM_CONFIG_OPTIONS% clean
++nmake -f Make_mvc.mak %VIM_CONFIG_OPTIONS%
 +
 +C:\Windows\System32\xcopy.exe /y /f gvim.exe "C:\Program Files (x86)\Vim\vim73\"
 +C:\Windows\System32\xcopy.exe /y /f vimrun.exe "C:\Program Files (x86)\Vim\vim73\"
