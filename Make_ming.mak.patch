@@ -1,7 +1,7 @@
-diff -r 869a63c3f311 src/Make_ming.mak
---- a/src/Make_ming.mak	Wed Jun 13 19:19:41 2012 +0200
-+++ b/src/Make_ming.mak	Thu Jun 14 10:33:24 2012 -0400
-@@ -27,48 +27,48 @@
+diff -r 27bfb1674333 src/Make_ming.mak
+--- a/src/Make_ming.mak	Wed Dec 12 18:20:32 2012 +0100
++++ b/src/Make_ming.mak	Wed Dec 12 13:42:05 2012 -0500
+@@ -28,35 +28,35 @@
  # set to yes for a debug build
  DEBUG=no
  # set to SIZE for size, SPEED for speed, MAXSPEED for maximum optimization
@@ -9,53 +9,39 @@ diff -r 869a63c3f311 src/Make_ming.mak
  # set to yes to make gvim, no for vim
  GUI=yes
  # FEATURES=[TINY | SMALL  | NORMAL | BIG | HUGE]
- # set to TINY to make minimal version (few features)
+ # Set to TINY to make minimal version (few features).
 -FEATURES=BIG
 +FEATURES=HUGE
- # set to one of i386, i486, i586, i686 as the minimum target processor
+ # Set to one of i386, i486, i586, i686 as the minimum target processor.
+ # For amd64/x64 architecture set ARCH=x86-64 .
 -ARCH=i386
 +ARCH=native
- # set to yes to cross-compile from unix; no=native Windows
+ # Set to yes to cross-compile from unix; no=native Windows.
  CROSS=no
- # set to path to iconv.h and libiconv.a to enable using 'iconv.dll'
+ # Set to path to iconv.h and libiconv.a to enable using 'iconv.dll'.
  #ICONV="."
  ICONV=yes
  GETTEXT=yes
- # set to yes to include multibyte support
+ # Set to yes to include multibyte support.
  MBYTE=yes
- # set to yes to include IME support
+ # Set to yes to include IME support.
  IME=yes
  DYNAMIC_IME=yes
- # set to yes to enable writing a postscript file with :hardcopy
+ # Set to yes to enable writing a postscript file with :hardcopy.
 -POSTSCRIPT=no
 +POSTSCRIPT=yes
- # set to yes to enable OLE support
+ # Set to yes to enable OLE support.
 -OLE=no
 +OLE=yes
- # Set the default $(WINVER) to make it work with pre-Win2k
+ # Set the default $(WINVER) to make it work with pre-Win2k.
  ifndef WINVER
- WINVER = 0x0400
+ WINVER = 0x0500
  endif
- # Set to yes to enable Cscope support
+ # Set to yes to enable Cscope support.
  CSCOPE=yes
- # Set to yes to enable Netbeans support
+ # Set to yes to enable Netbeans support.
  NETBEANS=$(GUI)
- 
- 
- # Link against the shared version of libstdc++ by default.  Set
- # STATIC_STDCPLUS to "yes" to link against static version instead.
- ifndef STATIC_STDCPLUS
--STATIC_STDCPLUS=no
-+STATIC_STDCPLUS=yes
- endif
- 
- # If the user doesn't want gettext, undefine it.
- ifeq (no, $(GETTEXT))
- GETTEXT=
- endif
- # Added by E.F. Amatria <eferna1@platea.ptic.mec.es> 2001 Feb 23
- # Uncomment the first line and one of the following three if you want Native Language
-@@ -94,20 +94,20 @@ INTLLIB=gnu_gettext
+@@ -96,20 +96,20 @@ INTLLIB=gnu_gettext
  # uncomment the following, but I can't build a static version with them, ?-(|
  #GETTEXT=c:/gettext-0.10.37-20010430
  #STATIC_GETTEXT=USE_STATIC_GETTEXT
@@ -78,7 +64,7 @@ diff -r 869a63c3f311 src/Make_ming.mak
  #PERLLIB=/home/ron/ActivePerl/lib
  # on NT, it's here:
  PERLLIB=$(PERL)/lib
-@@ -117,17 +117,17 @@ XSUBPP_EXISTS=$(shell perl -e "print 1 u
+@@ -119,17 +119,17 @@ XSUBPP_EXISTS=$(shell perl -e "print 1 u
  ifeq "$(XSUBPP_EXISTS)" ""
  XSUBPP=perl $(XSUBPPTRY)
  else
@@ -97,7 +83,7 @@ diff -r 869a63c3f311 src/Make_ming.mak
  ifndef LUA_VER
  LUA_VER=51
  endif
-@@ -189,48 +189,49 @@ endif
+@@ -191,48 +191,49 @@ endif
  #   for fil in *.h ; do vim -e -c 'set ff=unix|w|q' $fil
  # and also, you will need to make a mingw32 'libpython20.a' to link with:
  #   cd $PYTHON/libs
@@ -150,7 +136,7 @@ diff -r 869a63c3f311 src/Make_ming.mak
  
  ifeq ($(CROSS),no)
  PYTHON3INC=-I $(PYTHON3)/include
-@@ -238,45 +239,45 @@ else
+@@ -240,47 +241,47 @@ else
  PYTHON3INC=-I $(PYTHON3)/win32inc
  endif
  endif
@@ -178,7 +164,9 @@ diff -r 869a63c3f311 src/Make_ming.mak
  #	  DYNAMIC_RUBY=yes (to load the Ruby DLL dynamically)
  #	  RUBY_VER=[Ruby version, eg 16, 17] (default is 16)
  #	  RUBY_VER_LONG=[Ruby version, eg 1.6, 1.7] (default is 1.6)
- #	    You must set RUBY_VER_LONG when change RUBY_VER.
+ #	    You must set RUBY_VER_LONG when changing RUBY_VER.
+ #	    You must set RUBY_API_VER version to RUBY_VER_LONG.
+ #	    Don't set ruby API version to RUBY_VER like 191.
 -#RUBY=c:/ruby
 +RUBY=c:/Ruby193
  ifdef RUBY
@@ -194,14 +182,14 @@ diff -r 869a63c3f311 src/Make_ming.mak
 -RUBY_VER_LONG = 1.6
 +RUBY_VER_LONG = 1.9.1
  endif
+ ifndef RUBY_API_VER
+ RUBY_API_VER = $(subst .,,$(RUBY_VER_LONG))
+ endif
  
  ifndef RUBY_PLATFORM
  ifeq ($(RUBY_VER), 16)
  RUBY_PLATFORM = i586-mswin32
- else
- ifneq ($(wildcard $(RUBY)/lib/ruby/$(RUBY_VER_LONG)/i386-mingw32),)
- RUBY_PLATFORM = i386-mingw32
-@@ -301,16 +302,17 @@ endif
+@@ -315,16 +316,17 @@ endif
  
  endif # RUBY
  
@@ -219,7 +207,7 @@ diff -r 869a63c3f311 src/Make_ming.mak
  DIRSLASH = /
  else
  # normal (Windows) compilation:
-@@ -436,18 +438,18 @@ endif
+@@ -471,18 +473,18 @@ endif
  ifeq ($(DEBUG),yes)
  CFLAGS += -g -fstack-check
  DEBUG_SUFFIX=d
