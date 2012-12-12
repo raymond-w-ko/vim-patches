@@ -1,56 +1,26 @@
-diff -r 869a63c3f311 src/Make_mvc.mak
---- a/src/Make_mvc.mak	Wed Jun 13 19:19:41 2012 +0200
-+++ b/src/Make_mvc.mak	Thu Jun 14 10:44:58 2012 -0400
-@@ -1,8 +1,52 @@
-+#DEBUG=yes
+diff -r 27bfb1674333 src/Make_mvc.mak
+--- a/src/Make_mvc.mak	Wed Dec 12 18:20:32 2012 +0100
++++ b/src/Make_mvc.mak	Wed Dec 12 13:44:44 2012 -0500
+@@ -466,16 +466,22 @@ OPTFLAG = /Ox
+ 
+ !if ("$(MSVCVER)" == "8.0") || ("$(MSVCVER)" == "9.0") || ("$(MSVCVER)" == "10.0") || ("$(MSVCVER)" == "11.0")
+ # Use link time code generation if not worried about size
+ !if "$(OPTIMIZE)" != "SPACE"
+ OPTFLAG = $(OPTFLAG) /GL
+ !endif
+ !endif
+ 
++!if ("$(MSVCVER)" == "11.0")
++!if "$(OPTIMIZE)" == "MAXSPEED"
++OPTFLAG = $(OPTFLAG) /Qpar /Ob2 /Oi /Ot /Oy- /GT /GF /GS- /Gy
++!endif
++!endif
 +
-+FEATURES=HUGE
-+MBYTE=yes
-+IME=yes
-+GIME=yes
-+GUI=yes
-+OLE=yes
-+
-+PERL=C:\Perl
-+DYNAMIC_PERL=yes
-+PERL_VER=514
-+
-+LUA=C:\Lua51
-+DYNAMIC_LUA=yes
-+LUA_VER=51
-+
-+TCL=C:\Tcl
-+DYNAMIC_TCL=yes
-+TCL_VER=85
-+TCL_VER_LONG=8.5
-+
-+RUBY=C:\Ruby
-+DYNAMIC_RUBY=yes
-+RUBY_VER=191
-+RUBY_VER_LONG=1.9.1
-+
-+PYTHON=C:\Python27
-+DYNAMIC_PYTHON=yes
-+PYTHON_VER=27
-+
-+PYTHON3=C:\Python32
-+DYNAMIC_PYTHON3=yes
-+PYTHON3_VER=32
-+
-+CSCOPE=yes
-+ICONV=yes
-+GETTEXT=yes
-+POSTSCRIPT=yes
-+NETBEANS=yes
-+OPTIMIZE=MAXSPEED
-+CPUNR=pentium4
-+MAP=yes
-+
- # Makefile for Vim on Win32 (Windows NT/2000/XP/2003 and Windows 95/98/Me)
- # and Win64, using the Microsoft Visual C++ compilers. Known to work with
- # VC5, VC6 (VS98), VC7.0 (VS2002), VC7.1 (VS2003), VC8 (VS2005),
- # VC9 (VS2008), and VC10 (VS2010).
- #
- # To build using other Windows compilers, see INSTALLpc.txt
- #
- # This makefile can build the console, GUI, OLE-enable, Perl-enabled and
+ # (/Wp64 is deprecated in VC9 and generates an obnoxious warning.)
+ !if ("$(MSVCVER)" == "7.0") || ("$(MSVCVER)" == "7.1") || ("$(MSVCVER)" == "8.0") 
+ CFLAGS=$(CFLAGS) $(WP64CHECK)
+ !endif
+ 
+ CFLAGS = $(CFLAGS) $(OPTFLAG) -DNDEBUG $(CPUARG)
+ RCFLAGS = $(rcflags) $(rcvars) -DNDEBUG
+ ! ifdef USE_MSVCRT
