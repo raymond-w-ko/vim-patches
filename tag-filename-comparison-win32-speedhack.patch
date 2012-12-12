@@ -1,7 +1,7 @@
-diff -r 869a63c3f311 src/tag.c
---- a/src/tag.c	Wed Jun 13 19:19:41 2012 +0200
-+++ b/src/tag.c	Thu Jun 14 10:08:36 2012 -0400
-@@ -3661,32 +3661,129 @@ test_for_current(fname, fname_end, tag_f
+diff -r 27bfb1674333 src/tag.c
+--- a/src/tag.c	Wed Dec 12 18:20:32 2012 +0100
++++ b/src/tag.c	Wed Dec 12 13:37:45 2012 -0500
+@@ -3663,32 +3663,129 @@ test_for_current(fname, fname_end, tag_f
      char_u  *fname;
      char_u  *fname_end;
      char_u  *tag_fname;
