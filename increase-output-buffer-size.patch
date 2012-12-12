@@ -1,0 +1,22 @@
+diff -r 27bfb1674333 src/term.c
+--- a/src/term.c	Wed Dec 12 18:20:32 2012 +0100
++++ b/src/term.c	Wed Dec 12 13:57:02 2012 -0500
+@@ -2472,17 +2472,17 @@ termcapinit(name)
+  * the number of calls to ui_write is reduced by using the buffer "out_buf"
+  */
+ #ifdef DOS16
+ # define OUT_SIZE	255		/* only have 640K total... */
+ #else
+ # ifdef FEAT_GUI_W16
+ #  define OUT_SIZE	1023		/* Save precious 1K near data */
+ # else
+-#  define OUT_SIZE	2047
++#  define OUT_SIZE	65535
+ # endif
+ #endif
+ 	    /* Add one to allow mch_write() in os_win32.c to append a NUL */
+ static char_u		out_buf[OUT_SIZE + 1];
+ static int		out_pos = 0;	/* number of chars in out_buf */
+ 
+ /*
+  * out_flush(): flush the output buffer

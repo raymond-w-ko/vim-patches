@@ -1,0 +1,97 @@
+diff -r 27bfb1674333 src/Makefile
+--- a/src/Makefile	Wed Dec 12 18:20:32 2012 +0100
++++ b/src/Makefile	Wed Dec 12 13:53:35 2012 -0500
+@@ -313,23 +313,23 @@ CClink = $(CC)
+ # examples (can only use one!):
+ #CONF_ARGS = --exec-prefix=/usr
+ #CONF_ARGS = --with-vim-name=vim7 --with-ex-name=ex7 --with-view-name=view7
+ #CONF_ARGS = --with-global-runtime=/etc/vim
+ #CONF_ARGS = --with-local-dir=/usr/share
+ #CONF_ARGS = --without-local-dir
+ 
+ # Use this one if you distribute a modified version of Vim.
+-#CONF_ARGS = --with-modified-by="John Doe"
++CONF_ARGS = --with-modified-by="Raymond W. Ko"
+ 
+ # GUI - For creating Vim with GUI (gvim) (B)
+ # Uncomment this line when you don't want to get the GUI version, although you
+ # have GTK, Motif and/or Athena.  Also use --without-x if you don't want X11
+ # at all.
+-#CONF_OPT_GUI = --disable-gui
++CONF_OPT_GUI = --disable-gui
+ 
+ # Uncomment one of these lines if you have that GUI but don't want to use it.
+ # The automatic check will use another one that can be found.
+ # Gnome is disabled by default, it may cause trouble.
+ #CONF_OPT_GUI = --disable-gtk2-check
+ #CONF_OPT_GUI = --enable-gnome2-check
+ #CONF_OPT_GUI = --disable-motif-check
+ #CONF_OPT_GUI = --disable-athena-check
+@@ -415,17 +415,17 @@ CClink = $(CC)
+ # NOTE: Using this together with Perl may cause a crash in initialization.
+ # For Python3 support make a symbolic link in /usr/local/bin: 
+ #	ln -s python3 python3.1
+ # If both python2.x and python3.x are enabled then the linking will be via
+ # dlopen(), dlsym(), dlclose(), i.e. pythonX.Y.so must be available
+ # However, this may still cause problems, such as "import termios" failing.
+ # Build two separate versions of Vim in that case.
+ #CONF_OPT_PYTHON = --enable-pythoninterp
+-#CONF_OPT_PYTHON = --enable-pythoninterp=dynamic
++CONF_OPT_PYTHON = --enable-pythoninterp=dynamic
+ #CONF_OPT_PYTHON3 = --enable-python3interp
+ #CONF_OPT_PYTHON3 = --enable-python3interp=dynamic
+ 
+ # RUBY
+ # Uncomment this when you want to include the Ruby interface.
+ # First one for static linking, second one for loading when used.
+ # Note: you need the development package (e.g., ruby1.9.1-dev on Ubuntu).
+ #CONF_OPT_RUBY = --enable-rubyinterp
+@@ -493,27 +493,27 @@ CClink = $(CC)
+ 
+ # FEATURES - For creating Vim with more or less features
+ # Uncomment one of these lines when you want to include few to many features.
+ # The default is "normal".
+ #CONF_OPT_FEAT = --with-features=tiny
+ #CONF_OPT_FEAT = --with-features=small
+ #CONF_OPT_FEAT = --with-features=normal
+ #CONF_OPT_FEAT = --with-features=big
+-#CONF_OPT_FEAT = --with-features=huge
++CONF_OPT_FEAT = --with-features=huge
+ 
+ # COMPILED BY - For including a specific e-mail address for ":version".
+ #CONF_OPT_COMPBY = "--with-compiledby=John Doe <JohnDoe@yahoo.com>"
+ 
+ # X WINDOWS DISABLE - For creating a plain Vim without any X11 related fancies
+ # (otherwise Vim configure will try to include xterm titlebar access)
+ # Also disable the GUI above, otherwise it will be included anyway.
+ # When both GUI and X11 have been disabled this may save about 15% of the
+ # code and make Vim startup quicker.
+-#CONF_OPT_X = --without-x
++CONF_OPT_X = --without-x
+ 
+ # X WINDOWS DIRECTORY - specify X directories
+ # If configure can't find you X stuff, or if you have multiple X11 derivatives
+ # installed, you may wish to specify which one to use.
+ # Select nothing to let configure choose.
+ # This here selects openwin (as found on sun).
+ #XROOT = /usr/openwin
+ #CONF_OPT_X = --x-include=$(XROOT)/include --x-libraries=$(XROOT)/lib
+@@ -909,17 +909,17 @@ EVIEWTARGET	= $(EVIEWNAME)$(LNKEXT)
+ ### Names of the tools that are also made  {{{1
+ TOOLS = xxd/xxd$(EXEEXT)
+ 
+ ### Installation directories.  The defaults come from configure. {{{1
+ #
+ ### prefix	the top directory for the data (default "/usr/local")
+ #
+ # Uncomment the next line to install Vim in your home directory.
+-#prefix = $(HOME)
++prefix = $(HOME)/vim
+ 
+ ### exec_prefix	is the top directory for the executable (default $(prefix))
+ #
+ # Uncomment the next line to install the Vim executable in "/usr/machine/bin"
+ #exec_prefix = /usr/machine
+ 
+ ### BINDIR	dir for the executable	 (default "$(exec_prefix)/bin")
+ ### MANDIR	dir for the manual pages (default "$(prefix)/man")
